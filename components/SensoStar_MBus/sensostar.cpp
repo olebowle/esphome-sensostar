@@ -318,9 +318,11 @@ void SensoStarComponent::loop() {
                             if (this->energy_calc_ > 0)
                                 this->energy_sensor_->publish_state(energy);
                             this->energy_calc_ = energy;
+                            this->last_energy_calc_ = now;
                         }
                         else if (!std::isnan(this->energy_sensor_->get_raw_state()) && power >= 0){
-                            this->energy_calc_ += power / 3600 * (now - this->last_transmission_) / 1000;
+                            this->energy_calc_ += power / 1000.0 * (now - this->last_energy_calc_) / 1000 / 3600;
+                            this->last_energy_calc_ = now;
                             if (floor(energy) == floor(this->energy_calc_))
                                 this->energy_sensor_->publish_state(this->energy_calc_);
                         }
