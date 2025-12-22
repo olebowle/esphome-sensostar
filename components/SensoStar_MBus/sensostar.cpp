@@ -147,7 +147,7 @@ void SensoStarComponent::loop() {
                     double flow = -127;
                     double tdiff = -127;
                     // Store values for energy calculation
-                    int32_t power = -127;
+                    float power = -127;
                     float energy = -127;
                     // Decode
 					this->flash_data_led_(); // Flash LED when new data arrived
@@ -320,10 +320,11 @@ void SensoStarComponent::loop() {
                             this->energy_calc_ = energy;
                         }
                         else if (!std::isnan(this->energy_sensor_->get_raw_state()) && power >= 0){
-                            this->energy_calc_ += power / 3600 * (now - this->last_transmission_) / 1000;
+                            this->energy_calc_ += power / 3600.0f * (float)(uint32_t)(now - this->last_energy_calc_) / 1000000.0f;
                             if (floor(energy) == floor(this->energy_calc_))
                                 this->energy_sensor_->publish_state(this->energy_calc_);
                         }
+                        this->last_energy_calc_ = now;
                     }
 
                     if (this->calculated_power_sensor_) {
