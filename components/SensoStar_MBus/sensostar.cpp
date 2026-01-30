@@ -52,6 +52,8 @@ void SensoStarComponent::publish_nans_(){
         this->temperature_diff_sensor_->publish_state(NAN);
     if (this->calculated_power_sensor_)
         this->calculated_power_sensor_->publish_state(NAN);
+    if (this->calculated_energy_deice_sensor_)
+        this->calculated_energy_deice_sensor_->publish_state(NAN);
 #endif
 }
 
@@ -334,6 +336,14 @@ void SensoStarComponent::loop() {
                             this->calculated_power_sensor_->publish_state(flow / 3.6 * 4193 * tdiff);
                         else
                             this->calculated_power_sensor_->publish_state(0);
+                    }
+
+                    if (calculated_energy_deice_sensor_) {
+                        if (this->last_energy_deice_calc_ && flow > 0 && tdiff < 0 && tdiff != -127) {
+                            this->energy_deice_calc_ -= flow / 3.6 * 4193 * tdiff / 3600.0f * (float)(uint32_t)(now - this->last_energy_deice_calc_) / 1000000.0f;
+                            this->calculated_energy_deice_sensor_->publish_state(this->energy_deice_calc_);
+                        }
+                        this->last_energy_deice_calc_ = now;
                     }
 #endif
 

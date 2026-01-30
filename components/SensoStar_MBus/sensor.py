@@ -33,6 +33,7 @@ CONF_TEMPERATURE_FLOW = "temperature_flow"
 CONF_TEMPERATURE_RETURN = "temperature_return"
 CONF_TEMPERATURE_DIFF = "temperature_diff"
 CONF_CALCULATED_POWER = "calculated_power"
+CONF_CALCULATED_ENERGY_DEICE = "calculated_energy_deice"
 
 TYPES = [
     CONF_ENERGY,
@@ -42,7 +43,8 @@ TYPES = [
     CONF_TEMPERATURE_FLOW,
     CONF_TEMPERATURE_RETURN,
     CONF_TEMPERATURE_DIFF,
-    CONF_CALCULATED_POWER
+    CONF_CALCULATED_POWER,
+    CONF_CALCULATED_ENERGY_DEICE
 ]
 
 CONFIG_SCHEMA = cv.All(
@@ -102,6 +104,13 @@ CONFIG_SCHEMA = cv.All(
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_POWER,
                 state_class=STATE_CLASS_MEASUREMENT,
+            ),
+            cv.Optional(CONF_CALCULATED_ENERGY_DEICE): sensor.sensor_schema(
+                unit_of_measurement=UNIT_KILOWATT_HOURS,
+                icon=ICON_POWER,
+                accuracy_decimals=2,
+                device_class=DEVICE_CLASS_ENERGY,
+                state_class=STATE_CLASS_TOTAL_INCREASING,
             ),
         }
     ).extend(cv.COMPONENT_SCHEMA)

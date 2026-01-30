@@ -29,6 +29,7 @@ class SensoStarComponent : public PollingComponent, public uart::UARTDevice {
   SUB_SENSOR(temperature_return)
   SUB_SENSOR(temperature_diff)
   SUB_SENSOR(calculated_power)
+  SUB_SENSOR(calculated_energy_deice)
 #endif
 
 #ifdef USE_TEXT_SENSOR
@@ -52,6 +53,8 @@ class SensoStarComponent : public PollingComponent, public uart::UARTDevice {
   uint32_t last_transmission_{0};
   uint32_t last_energy_calc_{0};
   float energy_calc_{0};
+  float energy_deice_calc_{0};
+  uint32_t last_energy_deice_calc_{0};
   uint16_t last_send_tx_offset_{0};
   uint8_t receiving_{0};
   uint8_t init_state_{0};
